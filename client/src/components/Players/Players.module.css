@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  height: 100px;
+  justify-content: space-between;
+  flex-direction: column;
+  flex: 1 1 0px;
+  height: 100%;
+  margin: 10px;
+}
+
+.box {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  flex: 1 1 0px;
+  /* height: 25%; */
+}
+.box img {
+  /* width: 120px; */
+  height: 200px;
+  max-width: 100%;
+  /* margin: 10px; */
+}
+.box_border {
+  display: flex;
+  /* justify-content: space-between; */
+  flex-direction: row;
+  align-items: center;
+  flex: 1 1 0px;
+
+  word-break: break-all;
+  width: 100%;
+  border: 1px solid #6c63ff;
+}
+
+.box_border_left {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+
+  flex: 1 1 0px;
+  height: 100%;
+  word-break: break-all;
+    margin-bottom: 100px;
+  width: 50%;
+}
+.box_border_right {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+
+  flex: 1 1 0px;
+  height: 100%;
+  word-break: break-all;
+  width: 50%;
+}
+
+.box h1 {
+  font-family: 'Tangerine', serif;
+  font-size: 40px;
+  text-shadow: 4px 4px 4px #aaa;
+  align-items: center;
+
+}
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  flex: 1 1 0px;
+  background-color: #6c63ff;
+}
+
+.buttonContainer button {
+  background-color: #6c63ff;
+  color: white;
+  text-shadow: 4px 4px 4px #aaa;
+
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonContainer img {
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+}
