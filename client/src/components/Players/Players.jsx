@@ -30,6 +30,7 @@ const Players = ({ state, address }) => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const AccountModal = () => {
+    const [file, setFile] = useState();
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
@@ -39,19 +40,23 @@ const Players = ({ state, address }) => {
         toast.error('Please fill in all fields');
         return;
       }
-      const user = {
-        name,
-        phoneNumber,
-        email,
-        address,
-        walletAddress: account,
-      };
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('name', name);
+      formData.append('phoneNumber', phoneNumber);
+      formData.append('email', email);
+      formData.append('address', address);
+      formData.append('walletAddress', account);
       try {
-        await axios.post('http://localhost:5000/addUser', user);
+        await axios.post('http://localhost:5000/addUser', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         toast.success('User added successfully');
         reloadEffect();
       } catch (error) {
-        toast.error('Error adding user');
+        toast.error(error.message);
       }
       setShowModal(false);
     };
@@ -66,6 +71,13 @@ const Players = ({ state, address }) => {
             placeholder="Name"
             onChange={(e) => setName(e.target.value)}
           />
+          <input
+            className={modalStyles.modal_input}
+            filename={file}
+            onChange={(e) => setFile(e.target.files[0])}
+            type="file"
+            accept="image/*"
+          ></input>
           <input
             className={modalStyles.modal_input}
             type="number"
@@ -120,7 +132,7 @@ const Players = ({ state, address }) => {
         if (err.response.status === 404) {
           toast.error('Please register before buying tickets');
           setShowModal(true);
-        } else console.log(err.response.data);
+        } else console.log(err.response.data.message);
       }
     };
     state.web3 && getAccount();
@@ -140,9 +152,6 @@ const Players = ({ state, address }) => {
         count[i] = (count[i] || 0) + 1;
       });
 
-      for (const key in count) {
-        setArr((arr) => [...arr, { address: key, count: count[key] }]);
-      }
     };
     state.web3 && getRegisteredPlayers();
   }, [state, state.web3, reload]);
@@ -159,18 +168,14 @@ const Players = ({ state, address }) => {
     const accounts = await web3.eth.getAccounts();
     const accountAddress = accounts[0];
     const value = web3.utils.toWei('1', 'ether');
-    const tx = {
+    const hash = await web3.eth.sendTransaction({
       from: accountAddress,
       to: address,
       value: value,
-    };
-    const hash = await web3.eth.sendTransaction(tx);
-    console.log(hash);
+    });
     web3.eth.getTransactionReceipt(hash.transactionHash, (err, receipt) => {
       if (err) {
-        console.log(err);
       } else {
-        console.log(receipt);
         reloadEffect();
       }
     });
@@ -181,6 +186,15 @@ const Players = ({ state, address }) => {
       <div className={modalStyles.account_modal}>
         <div className={modalStyles.account_modal_content}>
           <h1>Profile</h1>
+          <img
+            src={`${user?.profileImage}`}
+            alt="profile"
+            style={{ width: '100px', height: '100px',
+              borderRadius: '50%',
+              padding:'5px',
+              border:'2px dashed #000'
+             }}
+          />
           <input
             className={modalStyles.modal_input}
             type="text"
@@ -300,9 +314,10 @@ const Players = ({ state, address }) => {
             {arr.length > 0 ? (
               arr.map((player, index) => {
                 return (
-                  <div className={styles.player +
-                    " " + styles.box_border_left
-                  } key={index}>
+                  <div
+                    className={styles.player + ' ' + styles.box_border_left}
+                    key={index}
+                  >
                     <p>
                       {player.address} - {player.count} ticket(s)
                     </p>
@@ -312,8 +327,6 @@ const Players = ({ state, address }) => {
                         getUserByWalletAddress(player.address);
                         setShowProfileModal(true);
                       }}
-
-
                     >
                       Show Profile
                     </button>

@@ -8,6 +8,10 @@ const userSchema = new Schema(
     email: String,
     address: String,
     walletAddress: String,
+    profileImage: {
+      type: String,
+      default: 'https://www.pngmart.com/files/21/Admin-Profile-PNG-Clipart.png',
+    },
   },
   {
     timestamps: true,

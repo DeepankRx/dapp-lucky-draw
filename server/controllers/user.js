@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+const cloudinary = require('cloudinary').v2;
 exports.getAUser = async (req, res) => {
   const { walletAddress } = req.params;
   try {
@@ -61,6 +61,15 @@ exports.addUser = async (req, res) => {
     return res.status(400).json({
       message: 'fill all the fields',
     });
+
+  const { file } = req;
+  if (!file)
+    return res.status(400).json({
+      message: 'Please provide image',
+    });
+
+  const { url } = await cloudinary.uploader.upload(file.path);
+
   try {
     const user = await User.create({
       name,
@@ -68,6 +77,7 @@ exports.addUser = async (req, res) => {
       email,
       address,
       walletAddress,
+      profileImage: url,
     });
     return res.status(200).json({
       message: 'User added successfully!',

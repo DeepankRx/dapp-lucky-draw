@@ -20,16 +20,13 @@ const Winners = () => {
 
   return (
     <div className={styles.container}>
-      <div
-      className={styles.heading}
-      >
+      <div className={styles.heading}>
         <h1 className={styles.h1}>List Of Winners</h1>
       </div>
       <div>
-
-      {winners.map((item) => {
-        return <Card user={item} />;
-      })}
+        {winners.map((item) => {
+          return <Card key={item._id} user={item} />;
+        })}
       </div>
     </div>
   );

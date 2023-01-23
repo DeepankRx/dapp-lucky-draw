@@ -25,8 +25,10 @@ const App = () => {
           Lottery.abi,
           deployedNetwork && deployedNetwork.address
         );
+
         setState({ web3, contract: instance });
         setAddress(deployedNetwork.address);
+
       } catch (error) {
         alert(
           `Failed to load web3, accounts, or contract. Check console for details.`
